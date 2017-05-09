@@ -2,8 +2,10 @@ let express = require('express');
 let app = express();
 
 app.get('/', (request, response) => {
-	response.send('OK');
+	throw 'Error';
+	// response.send('OK');
 });
 
 
-app.listen(3000);
+// app.listen(3000);
+module.exports = app;
