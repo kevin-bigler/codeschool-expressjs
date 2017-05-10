@@ -7,12 +7,23 @@ describe('Requests to the root path', function() {
 
 		request(app)
 			.get('/')
-			.expect(200)
-			.end(function(error) {
-				if (error) throw error;
-				done();
-			});
+			.expect(200, done);
 
+	});
+
+	it('Returns an HTML format', function(done){
+
+		request(app)
+			.get('/')
+			.expect('Content-Type', /html/, done);
+
+	});
+
+	it('Returns an index file with "Cities"', function(done){
+
+		request(app)
+			.get('/')
+			.expect(/cities/i, done);
 	});
 
 });
@@ -33,10 +44,6 @@ describe('Listing cities on /cities', function(){
 		request(app)
 			.get('/cities')
 			.expect('Content-Type', /json/, done);
-			// .end(function(error) {
-			// 	if (error) throw error;
-			// 	done();
-			// });
 
 	});
 
@@ -45,6 +52,7 @@ describe('Listing cities on /cities', function(){
 		request(app)
 			.get('/cities')
 			.expect(JSON.stringify(['Mesa', 'Portland', 'Fargo']), done);
+
 	});
 
 
