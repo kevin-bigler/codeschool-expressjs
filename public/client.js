@@ -13,12 +13,12 @@ $(function(){
 		$.ajax({
 			type: 'POST', url: '/cities', data: cityData
 		})
-		.error(function() {
+		.fail(function() {
 			$('.alert').show();
 		})
-		.success(function() {
+		.done(function(cityName) {
 			appendToList([cityName]);
-			forms.trigger('reset');
+			form.trigger('reset');
 		});
 	});
 
