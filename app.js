@@ -8,4 +8,8 @@ app.get('/cities', function(request, response) {
 	response.json(cities);
 });
 
+app.post('/cities', function (req, res) {
+	res.sendStatus(201);
+});
+
 module.exports = app;	// do it this way, as a module, so that we can write tests using app
