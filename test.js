@@ -1,6 +1,12 @@
 let request = require('supertest');
 let app = require('./app');
 
+let redis = require('redis');
+let client = redis.createClient();
+
+client.select('test'.length);
+client.flushdb();
+
 describe('Requests to the root path', function() {
 
 	it('Returns a 200 status code', function(done) {
@@ -29,7 +35,40 @@ describe('Requests to the root path', function() {
 });
 
 
+describe('Creating new cities', function(){
+
+	before('Clear database', function(done) {
+		client.flushdb(done);
+	});
+
+	afterEach('Clear database', function(done){
+		client.flushdb(done);
+	});
+
+
+	it('Returns a 201 status code', function(done){
+		request(app)
+			.post('/cities')
+			.send('name=Springfield&description=where+the+Simpsons+live')
+			.expect(201, done);
+	});
+
+	it('Returns the city name', function(done){
+		request(app)
+			.post('/cities')
+			.send('name=Springfield&description=where+the+Simpsons+live')
+			.expect(/springfield/i, done);
+	});
+
+});
+
+
 describe('Listing cities on /cities', function(){
+
+	before('Clear database', function(done){
+		client.flushdb(done);
+	});
+
 
 	it('Returns 200 status code', function(done){
 
@@ -51,27 +90,8 @@ describe('Listing cities on /cities', function(){
 
 		request(app)
 			.get('/cities')
-			.expect(JSON.stringify(['Mesa', 'Portland', 'Fargo']), done);
+			.expect(JSON.stringify([]), done);
 
-	});
-
-});
-
-
-describe('Creating new cities', function(){
-
-	it('Returns a 201 status code', function(done){
-		request(app)
-			.post('/cities')
-			.send('name=Springfield&description=where+the+Simpsons+live')
-			.expect(201, done);
-	});
-
-	it('Returns the city name', function(done){
-		request(app)
-			.post('/cities')
-			.send('name=Springfield&description=where+the+Simpsons+live')
-			.expect(/springfield/i, done);
 	});
 
 });
