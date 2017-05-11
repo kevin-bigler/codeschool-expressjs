@@ -62,6 +62,26 @@ describe('Creating new cities', function(){
 
 });
 
+describe('Deleting cities', function(){
+
+	before('Add Banana test data', function(done){
+		client.hset('cities', 'Banana', 'a tasty fruit', done);
+	});
+
+	afterEach('Clear database', function(done){
+		client.flushdb(done);
+	});
+
+	it('Returns a 204 status code', function(done){
+
+		request(app)
+			.delete('/cities/Banana')
+			.expect(204, done);
+
+	});
+
+});
+
 
 describe('Listing cities on /cities', function(){
 
@@ -95,4 +115,5 @@ describe('Listing cities on /cities', function(){
 	});
 
 });
+
 

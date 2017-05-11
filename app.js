@@ -11,10 +11,6 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 console.log(`NODE_ENV: ${NODE_ENV}`);
 client.select(NODE_ENV.length);
 
-// client.hset('cities', 'Mesa', 'description');
-// client.hset('cities', 'Portland', 'description');
-// client.hset('cities', 'Fargo', 'description');
-
 app.use(express.static('public'));
 
 app.get('/cities', function(request, response) {
@@ -30,6 +26,13 @@ app.post('/cities', urlencode, function (req, res) {
 		if (error) throw error;
 
 		res.status(201).json(newCity.name);
+	});
+});
+
+app.delete('/cities/:name', function (req, res) {
+  client.hdel('cities', req.params.name, function(error) {
+		if (error) throw error;
+		res.sendStatus(204);
 	});
 });
 
