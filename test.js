@@ -125,3 +125,51 @@ describe('Listing cities on /cities', function(){
 });
 
 
+describe('Showing city info', function(){
+
+	before(function(done){
+		client.hset('cities', 'Marvin', 'quite the Marshian', done);
+	});
+
+	after(function(done){
+		client.flushdb(done);
+	});
+
+	it('Returns 200 status code', function(done){
+
+		request(app)
+			.get('/cities/Marvin')
+			.expect(200, done);
+
+	});
+
+	it('Returns HTML format', function(done){
+
+		request(app)
+			.get('/cities/Marvin')
+			.expect('Content-Type', /html/, done);
+
+	});
+
+	it('Returns information for given city', function(done){
+
+		request(app)
+			.get('/cities/Marvin')
+			.expect(/marshian/i, done);
+
+	});
+
+	it('Returns 404 status code for non-existent city', function(done){
+
+		request(app)
+			.get('/cities/fake')
+			.expect(404, done);
+
+	});
+
+
+
+});
+
+
+
